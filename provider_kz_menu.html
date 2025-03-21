@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кликер</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .clicker {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .click-button {
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+        .click-button img {
+            width: 150px;
+            height: auto;
+        }
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .timer {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="goBack()">Вернуться в меню</button>
+    <div class="container">
+        <div class="clicker">
+            <p>Кликов: <span id="clicks">0</span></p>
+            <p>Осталось кликов: <span id="remaining-clicks">5000</span></p>
+        </div>
+
+        <button class="click-button" id="click-button" onclick="handleClick()">
+            <img src="taptap.jpg" alt="Кликнуть">
+        </button>
+        <div class="timer">
+            <p>Время до сброса: <span id="timer">10:00</span></p>
+        </div>
+        <div class="banner" id="advert_21" style="border-radius: 5px;">
+            <div style="border-radius: 5px;">
+              <a href="https://t.me/miqyqiwi" style="border-radius: 5px;">
+                <img src="viplata.jpg" style="border-radius: 5px;">
+              </a>
+            </div>
+          </div>
+        <div class="footer">
+            Хочешь получить выплату за эти клики? Пиши сюда: <a href="https://t.me/miqyqiwi" target="_blank">@miqyqiwi</a>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация переменных
+        let clicks = parseInt(localStorage.getItem('clicks')) || 0;
+        let remainingClicks = parseInt(localStorage.getItem('remainingClicks')) || 5000;
+        let timer = 600; // 10 минут в секундах
+        let isTimerRunning = false;
+
+        // Обновляем интерфейс
+        document.getElementById('clicks').textContent = clicks;
+        document.getElementById('remaining-clicks').textContent = remainingClicks;
+
+        // Функция для обработки клика
+        function handleClick() {
+            if (remainingClicks <= 0) {
+                alert("Вы достигли лимита кликов!");
+                return;
+            }
+
+            clicks++;
+            remainingClicks--;
+            localStorage.setItem('clicks', clicks);
+            localStorage.setItem('remainingClicks', remainingClicks);
+
+            document.getElementById('clicks').textContent = clicks;
+            document.getElementById('remaining-clicks').textContent = remainingClicks;
+
+            if (!isTimerRunning) {
+                startTimer();
+                isTimerRunning = true;
+            }
+        }
+
+        // Функция для запуска таймера
+        function startTimer() {
+            const timerElement = document.getElementById('timer');
+            const interval = setInterval(() => {
+                timer--;
+                const minutes = Math.floor(timer / 60);
+                const seconds = timer % 60;
+                timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timer <= 0) {
+                    clearInterval(interval);
+                    remainingClicks = 5000;
+                    timer = 600;
+                    isTimerRunning = false;
+                    localStorage.setItem('remainingClicks', remainingClicks);
+                    document.getElementById('remaining-clicks').textContent = remainingClicks;
+                    timerElement.textContent = "10:00";
+                }
+            }, 1000);
+        }
+
+        // Функция для возврата в меню
+        function goBack() {
+            window.location.href = "index.html"; // Замените на ссылку на ваше меню
+        }
+    </script>
+</body>
+</html>
